@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище ComissiyaModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderStatus" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="OrderDeliveryDate" Type="datetime" Nullable="false" />
+          <Property Name="OrderPickupPoint" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="OrderPhoto" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Comissiya.dbo.OrderTovar" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="OrderTovar">
+          <Key>
+            <PropertyRef Name="IDOrder" />
+            <PropertyRef Name="IDTovar" />
+          </Key>
+          <Property Name="IDOrder" Type="int" Nullable="false" />
+          <Property Name="IDTovar" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tovar">
+          <Key>
+            <PropertyRef Name="TovarID" />
+          </Key>
+          <Property Name="TovarID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TovarArticleNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="TovarName" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="TovarCategoriya" Type="int" Nullable="false" />
+          <Property Name="TovarDateCreation" Type="date" Nullable="false" />
+          <Property Name="TovarDiscountAmount" Type="tinyint" />
+          <Property Name="TovarSeller" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TovarBuyer" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TovarCost" Type="decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="TovarPhoto" Type="nvarchar" MaxLength="50" />
+          <Property Name="TovarDescription" Type="nvarchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TovarCategory">
+          <Key>
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="CategoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserSurname" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserPatronymic" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserLogin" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UserPassword" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UserRole" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__OrderTova__IDOrd__4222D4EF">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderTovar" Type="Self.OrderTovar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderTovar">
+              <PropertyRef Name="IDOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderTova__IDTov__4316F928">
+          <End Role="Tovar" Type="Self.Tovar" Multiplicity="1" />
+          <End Role="OrderTovar" Type="Self.OrderTovar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tovar">
+              <PropertyRef Name="TovarID" />
+            </Principal>
+            <Dependent Role="OrderTovar">
+              <PropertyRef Name="IDTovar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tovar__TovarCate__3E52440B">
+          <End Role="TovarCategory" Type="Self.TovarCategory" Multiplicity="1" />
+          <End Role="Tovar" Type="Self.Tovar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TovarCategory">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Tovar">
+              <PropertyRef Name="TovarCategoriya" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserRole__398D8EEE">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ComissiyaModelContainer">
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tovar" EntityType="Self.Tovar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TovarCategory" EntityType="Self.TovarCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderTovar" EntityType="Self.OrderTovar" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [OrderTovar].[IDOrder] AS [IDOrder], 
+    [OrderTovar].[IDTovar] AS [IDTovar]
+    FROM [dbo].[OrderTovar] AS [OrderTovar]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__OrderTova__IDOrd__4222D4EF" Association="Self.FK__OrderTova__IDOrd__4222D4EF">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="OrderTovar" EntitySet="OrderTovar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderTova__IDTov__4316F928" Association="Self.FK__OrderTova__IDTov__4316F928">
+            <End Role="Tovar" EntitySet="Tovar" />
+            <End Role="OrderTovar" EntitySet="OrderTovar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tovar__TovarCate__3E52440B" Association="Self.FK__Tovar__TovarCate__3E52440B">
+            <End Role="TovarCategory" EntitySet="TovarCategory" />
+            <End Role="Tovar" EntitySet="Tovar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserRole__398D8EEE" Association="Self.FK__User__UserRole__398D8EEE">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ComissiyaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OrderDeliveryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OrderPickupPoint" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OrderPhoto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Tovar" Relationship="Self.OrderTovar" FromRole="Order" ToRole="Tovar" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK__User__UserRole__398D8EEE" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Tovar">
+          <Key>
+            <PropertyRef Name="TovarID" />
+          </Key>
+          <Property Name="TovarID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TovarArticleNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TovarName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TovarCategoriya" Type="Int32" Nullable="false" />
+          <Property Name="TovarDateCreation" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TovarDiscountAmount" Type="Byte" />
+          <Property Name="TovarSeller" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TovarBuyer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TovarCost" Type="Decimal" Precision="19" Scale="2" Nullable="false" />
+          <Property Name="TovarPhoto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TovarDescription" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="TovarCategory" Relationship="Self.FK__Tovar__TovarCate__3E52440B" FromRole="Tovar" ToRole="TovarCategory" />
+          <NavigationProperty Name="Order" Relationship="Self.OrderTovar" FromRole="Tovar" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="TovarCategory">
+          <Key>
+            <PropertyRef Name="CategoryID" />
+          </Key>
+          <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Tovar" Relationship="Self.FK__Tovar__TovarCate__3E52440B" FromRole="TovarCategory" ToRole="Tovar" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserSurname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserPatronymic" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserLogin" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserRole" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK__User__UserRole__398D8EEE" FromRole="User" ToRole="Role" />
+        </EntityType>
+        <Association Name="FK__User__UserRole__398D8EEE">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tovar__TovarCate__3E52440B">
+          <End Role="TovarCategory" Type="Self.TovarCategory" Multiplicity="1" />
+          <End Role="Tovar" Type="Self.Tovar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TovarCategory">
+              <PropertyRef Name="CategoryID" />
+            </Principal>
+            <Dependent Role="Tovar">
+              <PropertyRef Name="TovarCategoriya" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="OrderTovar">
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <End Role="Tovar" Type="Self.Tovar" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="ComissiyaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Order" EntityType="Self.Order" />
+          <EntitySet Name="Role" EntityType="Self.Role" />
+          <EntitySet Name="Tovar" EntityType="Self.Tovar" />
+          <EntitySet Name="TovarCategory" EntityType="Self.TovarCategory" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <AssociationSet Name="FK__User__UserRole__398D8EEE" Association="Self.FK__User__UserRole__398D8EEE">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tovar__TovarCate__3E52440B" Association="Self.FK__Tovar__TovarCate__3E52440B">
+            <End Role="TovarCategory" EntitySet="TovarCategory" />
+            <End Role="Tovar" EntitySet="Tovar" />
+          </AssociationSet>
+          <AssociationSet Name="OrderTovar" Association="Self.OrderTovar">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Tovar" EntitySet="Tovar" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ComissiyaModelContainer" CdmEntityContainer="ComissiyaEntities">
+          <EntitySetMapping Name="Order">
+            <EntityTypeMapping TypeName="ComissiyaModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="OrderDeliveryDate" ColumnName="OrderDeliveryDate" />
+                <ScalarProperty Name="OrderPickupPoint" ColumnName="OrderPickupPoint" />
+                <ScalarProperty Name="OrderPhoto" ColumnName="OrderPhoto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="ComissiyaModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tovar">
+            <EntityTypeMapping TypeName="ComissiyaModel.Tovar">
+              <MappingFragment StoreEntitySet="Tovar">
+                <ScalarProperty Name="TovarID" ColumnName="TovarID" />
+                <ScalarProperty Name="TovarArticleNumber" ColumnName="TovarArticleNumber" />
+                <ScalarProperty Name="TovarName" ColumnName="TovarName" />
+                <ScalarProperty Name="TovarCategoriya" ColumnName="TovarCategoriya" />
+                <ScalarProperty Name="TovarDateCreation" ColumnName="TovarDateCreation" />
+                <ScalarProperty Name="TovarDiscountAmount" ColumnName="TovarDiscountAmount" />
+                <ScalarProperty Name="TovarSeller" ColumnName="TovarSeller" />
+                <ScalarProperty Name="TovarBuyer" ColumnName="TovarBuyer" />
+                <ScalarProperty Name="TovarCost" ColumnName="TovarCost" />
+                <ScalarProperty Name="TovarPhoto" ColumnName="TovarPhoto" />
+                <ScalarProperty Name="TovarDescription" ColumnName="TovarDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TovarCategory">
+            <EntityTypeMapping TypeName="ComissiyaModel.TovarCategory">
+              <MappingFragment StoreEntitySet="TovarCategory">
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="ComissiyaModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserSurname" ColumnName="UserSurname" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserPatronymic" ColumnName="UserPatronymic" />
+                <ScalarProperty Name="UserLogin" ColumnName="UserLogin" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="OrderTovar" TypeName="ComissiyaModel.OrderTovar" StoreEntitySet="OrderTovar">
+            <EndProperty Name="Order">
+              <ScalarProperty Name="OrderID" ColumnName="IDOrder" />
+            </EndProperty>
+            <EndProperty Name="Tovar">
+              <ScalarProperty Name="TovarID" ColumnName="IDTovar" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
